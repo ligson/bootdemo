@@ -26,6 +26,8 @@ import javax.sql.DataSource;
 @EntityScan(basePackages = {"bootdemo.book.domain"})
 @Configuration
 public class BookDataConfig {
+    @Autowired
+    private JpaVendorAdapter jpaVendorAdapter;
 
     @Bean(name = "bookDataSource")
     @ConfigurationProperties(prefix = "spring.book.datasource")
@@ -33,21 +35,12 @@ public class BookDataConfig {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean
-    public JpaVendorAdapter bookJpaVendorAdapter() {
-        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-        hibernateJpaVendorAdapter.setGenerateDdl(true);
-        hibernateJpaVendorAdapter.setShowSql(true);
-        hibernateJpaVendorAdapter.setDatabase(Database.MYSQL);
-        return hibernateJpaVendorAdapter;
-    }
-
     @Primary
     @Bean(name = "bookEntityManagerFactory")
     public EntityManagerFactory entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(bookDataSource());
-        emf.setJpaVendorAdapter(bookJpaVendorAdapter());
+        emf.setJpaVendorAdapter(jpaVendorAdapter);
         emf.setPackagesToScan("bootdemo.book.domain");
         emf.setPersistenceUnitName("default");   // <- giving 'default' as name
         emf.afterPropertiesSet();
