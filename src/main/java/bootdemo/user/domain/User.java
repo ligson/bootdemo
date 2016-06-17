@@ -1,15 +1,17 @@
-package bootdemo.domain;
+package bootdemo.user.domain;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by trq on 2016/6/16.
  */
 @Entity
 @Table(name = "t_user")
-public class User {
+public class User implements Serializable {
     @Id
     @GenericGenerator(name = "systemUUID", strategy = "uuid")
     @GeneratedValue(generator = "systemUUID")
@@ -18,6 +20,10 @@ public class User {
     private String name;
     @Column(nullable = false)
     private String password;
+    @Column
+    private Date createDate;
+    @Column
+    private Boolean sex;
 
     public String getId() {
         return id;
@@ -41,5 +47,21 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Boolean getSex() {
+        return sex;
+    }
+
+    public void setSex(Boolean sex) {
+        this.sex = sex;
     }
 }
