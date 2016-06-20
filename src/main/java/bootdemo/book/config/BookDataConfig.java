@@ -3,15 +3,18 @@ package bootdemo.book.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManager;
@@ -22,7 +25,7 @@ import javax.sql.DataSource;
  * Created by trq on 2016/6/17.
  */
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"bootdemo.book.dao"}, entityManagerFactoryRef = "bookEntityManagerFactory")
+@EnableJpaRepositories(basePackages = {"bootdemo.book.dao"}, entityManagerFactoryRef = "bookEntityManagerFactory", transactionManagerRef = "bookTransactionManager")
 //@EntityScan(basePackages = {"bootdemo.book.domain"})
 @Configuration
 public class BookDataConfig {
@@ -49,5 +52,10 @@ public class BookDataConfig {
     @Bean(name = "bookEntityManager")
     public EntityManager entityManager() {
         return entityManagerFactory().createEntityManager();
+    }
+
+    @Bean(name = "bookTransactionManager")
+    public PlatformTransactionManager transactionManagerPrimary() {
+        return new JpaTransactionManager(entityManagerFactory());
     }
 }

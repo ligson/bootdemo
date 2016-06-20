@@ -1,5 +1,6 @@
 package boodemo.test;
 
+import bootdemo.book.domain.Book;
 import bootdemo.main.Bootstrap;
 import bootdemo.book.service.BookService;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class BookTest {
     @Test
     public void joinTest() {
         for (int i = 0; i < 100; i++) {
-            bookService.join("title" + i, "descripton" + i, new BigDecimal(Math.random() * 100));
+            Book book = bookService.join("title" + i, "descripton" + i, new BigDecimal(Math.random() * 100));
         }
     }
 }

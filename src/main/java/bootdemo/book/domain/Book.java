@@ -75,4 +75,16 @@ public class Book implements Serializable{
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", joinDate=" + joinDate +
+                ", createDate=" + createDate +
+                ", price=" + price +
+                '}';
+    }
 }

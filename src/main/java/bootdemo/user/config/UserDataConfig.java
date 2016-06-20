@@ -8,10 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManager;
@@ -22,19 +24,13 @@ import javax.sql.DataSource;
  * Created by trq on 2016/6/17.
  */
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"bootdemo.user.dao"}, entityManagerFactoryRef = "userEntityManagerFactory")
+@EnableJpaRepositories(basePackages = {"bootdemo.user.dao"}, entityManagerFactoryRef = "userEntityManagerFactory", transactionManagerRef = "userTransactionManager")
 //@EntityScan(basePackages = {"bootdemo.user.domain"})
 @Configuration
 public class UserDataConfig {
 
-    @Bean
-    public JpaVendorAdapter userJpaVendorAdapter() {
-        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-        hibernateJpaVendorAdapter.setShowSql(true);
-        hibernateJpaVendorAdapter.setGenerateDdl(true);
-        hibernateJpaVendorAdapter.setDatabase(Database.MYSQL);
-        return hibernateJpaVendorAdapter;
-    }
+    @Autowired
+    private JpaVendorAdapter jpaVendorAdapter;
 
 
     @Bean(name = "userDataSource")
@@ -49,7 +45,7 @@ public class UserDataConfig {
     public EntityManagerFactory entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(bookDataSource());
-        emf.setJpaVendorAdapter(userJpaVendorAdapter());
+        emf.setJpaVendorAdapter(jpaVendorAdapter);
         emf.setPackagesToScan("bootdemo.user.domain");
         emf.setPersistenceUnitName("default");   // <- giving 'default' as name
         emf.afterPropertiesSet();
@@ -59,5 +55,10 @@ public class UserDataConfig {
     @Bean(name = "userEntityManager")
     public EntityManager entityManager() {
         return entityManagerFactory().createEntityManager();
+    }
+
+    @Bean(name = "userTransactionManager")
+    public PlatformTransactionManager transactionManagerPrimary() {
+        return new JpaTransactionManager(entityManagerFactory());
     }
 }
