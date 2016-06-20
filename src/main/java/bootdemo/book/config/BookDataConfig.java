@@ -23,7 +23,7 @@ import javax.sql.DataSource;
  */
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"bootdemo.book.dao"}, entityManagerFactoryRef = "bookEntityManagerFactory")
-@EntityScan(basePackages = {"bootdemo.book.domain"})
+//@EntityScan(basePackages = {"bootdemo.book.domain"})
 @Configuration
 public class BookDataConfig {
     @Autowired
@@ -35,7 +35,6 @@ public class BookDataConfig {
         return DataSourceBuilder.create().build();
     }
 
-    @Primary
     @Bean(name = "bookEntityManagerFactory")
     public EntityManagerFactory entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();

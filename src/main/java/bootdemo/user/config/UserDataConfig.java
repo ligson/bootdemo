@@ -23,7 +23,7 @@ import javax.sql.DataSource;
  */
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"bootdemo.user.dao"}, entityManagerFactoryRef = "userEntityManagerFactory")
-@EntityScan(basePackages = {"bootdemo.user.domain"})
+//@EntityScan(basePackages = {"bootdemo.user.domain"})
 @Configuration
 public class UserDataConfig {
 
@@ -38,6 +38,7 @@ public class UserDataConfig {
 
 
     @Bean(name = "userDataSource")
+    @Primary
     @ConfigurationProperties(prefix = "spring.user.datasource")
     public DataSource bookDataSource() {
         return DataSourceBuilder.create().build();
