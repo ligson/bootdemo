@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
  */
 @Component("dbInterceptor")
 public class DbInterceptor extends EmptyInterceptor implements InitializingBean {
-    @Autowired
-    LocalSessionFactoryBean localSessionFactoryBean;
+    //@Autowired
+    //LocalSessionFactoryBean localSessionFactoryBean;
 
     @Override
     public String onPrepareStatement(String sql) {
